@@ -1,5 +1,9 @@
 # Testing unitario en Angular
 
+## Introducción
+
+Hacer pruebas unitarias en una aplicación ayudan a validar que esta se comporte como se espera.
+
 Una prueba unitaria es una forma de comprobar el correcto funcionamiento de una unidad de código, para asegurar que cada unidad funcione correctamente y eficientemente por separado, además de verificar que el código haga lo que tiene que hacer.
 
 ## Componentes
@@ -8,7 +12,7 @@ Un componente combina una plantilla HTML y una clase de TypeScript. De modo que 
 
 Dichas pruebas requieren crear el elemento host del componente en el DOM del navegador, como lo hace Angular, e investigar la interacción de la clase del componente con el DOM como lo describe su plantilla.
 
-Angular TestBedfacilita este tipo de pruebas. Pero en muchos casos, probar solo la clase del componente , sin la participación del DOM, puede validar gran parte del comportamiento del componente de una manera sencilla y más obvia.
+Angular TestBed facilita este tipo de pruebas. Pero en muchos casos, probar solo la clase del componente , sin la participación del DOM, puede validar gran parte del comportamiento del componente de una manera sencilla y más obvia.
 
 Las pruebas de clase de componentes deben mantenerse muy limpias y simples. Debes probar una sola unidad. A primera vista, deberías poder entender lo que está probando test.
 
@@ -483,3 +487,8 @@ describe("randomBoolean", () => {
   });
 });
 ```
+
+## Recursos
+
+- [Documentación oficial de Angular sobre test unitario](https://angular.io/guide/testing)
+- [A guide to unit testing in JavaScript](https://github.com/mawrkus/js-unit-testing-guide)
