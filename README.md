@@ -176,6 +176,34 @@ Los servicios son unidades de código a testear más sencillas que los component
 Vamos a realizar algunas pruebas unitarias sincrónicas y asincrónicas de un ValueService:
 
 ```ts
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+
+@Injectable()
+export class ValueService {
+
+  public value$: BehaviorSubject<string>;
+
+  constructor() {
+    this.value$ = new BehaviorSubject<string>('value');
+  }
+
+  getValue(): string {
+    return this.value$.value;
+  }
+
+  getObservableValue(): Observable<string> {
+    return this.value$.asObservable();
+  }
+
+  getPromiseValue(): Promise<string> {
+    return this.value$.toPromise();
+  }
+
+}
+```
+
+```ts
 // Straight Jasmine testing without Angular's testing support
 describe("ValueService", () => {
   let service: ValueService;
@@ -184,19 +212,19 @@ describe("ValueService", () => {
   });
 
   it("#getValue should return real value", () => {
-    expect(service.getValue()).toBe("real value");
+    expect(service.getValue()).toBe("value");
   });
 
   it("#getObservableValue should return value from observable", (done: DoneFn) => {
     service.getObservableValue().subscribe((value) => {
-      expect(value).toBe("observable value");
+      expect(value).toBe("value");
       done();
     });
   });
 
   it("#getPromiseValue should return value from a promise", (done: DoneFn) => {
     service.getPromiseValue().then((value) => {
-      expect(value).toBe("promise value");
+      expect(value).toBe("value");
       done();
     });
   });
