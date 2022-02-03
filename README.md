@@ -402,7 +402,7 @@ TestBed.configureTestingModule({
 
 Debido a que una pipe es una clase que tiene un método, transform (que manipula el valor de entrada en un valor de salida transformado), es más fácil de probar sin ninguna utilidad de prueba de Angular.
 
-A continuación se muestra un ejemplo de cómo debería verse una prueba de pipe:
+A continuación se muestra un ejemplo de cómo debería verse una prueba de pipe, en el cual se corta la cadena de texto a 20 caracteres como máximo:
 
 ```ts
 describe("TroncaturePipe", () => {
@@ -419,6 +419,35 @@ describe("TroncaturePipe", () => {
 });
 ```
 
+En el siguiente ejemplo se define una pipe con parámetros, con el fin de pasar el tamaño de un archivo a megabyte.
+
+```ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'filesize' })
+export class FileSizePipe implements PipeTransform {
+  transform(size: number, extension: string = 'MB') {
+    return (size / (1024 * 1024)).toFixed(2) + extension;
+  }
+}
+```
+
+```ts
+describe('FileSizePipe', () => {
+  it('create an instance', () => {
+    const pipe = new FileSizePipe(); // * pipe instantiation
+    expect(pipe).toBeTruthy();
+  });
+
+  it('truncate a string if its too long (>20)', () => {
+    const file = { name: 'logo.svg', size: 2120109, type: 'image/svg' };
+    const pipe = new FileSizePipe();
+    const value = pipe.transform(file.size, 'megabyte');
+    expect(value).toBe('2.02megabyte');
+  });
+});
+```
+
 ## Directivas
 
 Una directiva de atributo modifica el comportamiento de un elemento. Por lo tanto, se puede testear como una pipe donde solo prueba sus métodos, o con un componente host donde se verifica si cambia correctamente su comportamiento.
@@ -431,12 +460,16 @@ Aquí hay un ejemplo de cómo probar una directiva con un componente host:
   template: `<div [appPadding]="2">Test</div>`,
 })
 class HostComponent {}
+
+// * Host module:
 @NgModule({
   declarations: [HostComponent, PaddingDirective],
   exports: [HostComponent],
 })
 class HostModule {}
+```
 
+```ts
 // * Test suite:
 describe("PaddingDirective", () => {
   let component: HostComponent;
@@ -512,6 +545,23 @@ describe("randomBoolean", () => {
   it("Should return true if random value is 0.7", () => {
     spyOn(Math, "random").and.returnValue(0.7);
     expect(randomBoolean()).toBeTruthy();
+  });
+});
+```
+
+O simplemente se espía que sea llamado:
+
+```ts
+// ts
+export const fullscreen = (mode = true, el = 'body') =>
+  mode ? document.querySelector(el)?.requestFullscreen() : document.exitFullscreen();
+
+// spec
+describe('fullscreen', () => {
+  it('Should call "exitFullscreen" from body element', () => {
+    spyOn(document, 'exitFullscreen');
+    fullscreen(false);
+    expect(document.exitFullscreen).toHaveBeenCalled();
   });
 });
 ```
